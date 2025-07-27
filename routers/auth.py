@@ -7,6 +7,8 @@ import os
 from ..schemas.user import UserCreate, UserOut
 from dotenv import load_dotenv
 from ..models import Company, User
+from datetime import timedelta, datetime, timezone
+from jose import jwt, JWTError
 
 router=APIRouter(
     prefix="/auth",
@@ -57,3 +59,15 @@ def authenticate_user(db: Session, username_or_email: str, password:str):
     return user
 
 
+def create_access_token(username:str, user_id:int, user_role
+                        , expires_delta:timedelta):
+    encode={
+        'sub': username,
+        'id':user_id,
+        'role':user_role
+    }
+
+    expires= datetime.now(timezone.utc)+expires_delta
+    encode.update({'exp': expires})
+
+    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM )

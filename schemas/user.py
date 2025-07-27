@@ -6,6 +6,7 @@ class UserBase(BaseModel):
     username: str
     password: str
     email: EmailStr
+    role=str
     phone_number:str
 
 class UserCreate(UserBase):

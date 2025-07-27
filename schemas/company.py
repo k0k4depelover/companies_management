@@ -1,25 +1,17 @@
 from pydantic import BaseModel, EmailStr
 from typing import List
 
-
-class CompanyCreate(BaseModel):
-    username: str
-    country:str
-    password: str
-    email: EmailStr
+class CompanyBase(BaseModel):
     company_name: str
+    country:str
+    email_company: EmailStr
     nit:str
 
-class LoginRequest(BaseModel):
-    username_or_email: str
-    password: str
+class CompanyCreate(CompanyBase):
+    pass
 
-class CompanyOut(BaseModel):
+class CompanyOut(CompanyBase):
     id: int
-    username: str
-    email: EmailStr
-    phone: str
-    company: str
-
+    is_active: bool
     class Config:
         from_attributes = True

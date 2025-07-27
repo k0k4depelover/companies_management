@@ -42,5 +42,6 @@ class User(Base):
     username=Column(String(30), nullable=False)
     email=Column(String(100), unique=True)
     phone_number=Column(String(20))
+    user_role=Column(String(25))
     hashed_password=Column(String(245))
     is_active=Column(Boolean)
