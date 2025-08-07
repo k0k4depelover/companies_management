@@ -2,7 +2,7 @@ from pydantic import BaseModel, EmailStr
 
 class SupplierBase(BaseModel):
     name:str
-    company:str
+    country:str
     email: EmailStr
     phone: str
 
