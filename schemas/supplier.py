@@ -4,7 +4,7 @@ class SupplierBase(BaseModel):
     name:str
     country:str
     email: EmailStr
-    phone: str
+    phone_number: str
 
 class SupplierCreated(SupplierBase):
     pass

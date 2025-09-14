@@ -1,13 +1,18 @@
-from fastapi import APIRouter, HTTPException, status
-from ..models import Company, UserCompany
+from fastapi import APIRouter, HTTPException, status, Depends
+from typing import Annotated
+from ..models import Company, UserCompany, Role
 from ..schemas.company import CompanyCreate, CompanyOut
-from ..dependencies import db_dependency, user_dependency
+from ..dependencies import db_dependency
 from typing import List
+from ..routers.auth import get_current_user
+
 
 router=APIRouter(
     prefix='/user/companies',
     tags=['companies']
 ) 
+
+user_dependency = Annotated[dict, Depends(get_current_user)]
 
 @router.get("/all", response_model=List[CompanyOut])
 async def get_companies(db: db_dependency, user: user_dependency):
@@ -42,6 +47,24 @@ async def create_company(db: db_dependency, user: user_dependency, company: Comp
     )
     db.add(company_info)
     db.commit()
+    db.flush() 
+
+    owner_role= Role(
+        name="Owner",
+        description="Owner of the company, with full administrative rights.",
+        company_id=company_info.id
+    )
+    
+    user_company= UserCompany(
+        user_id=user.get('id'),
+        company_id=company_info.id,
+        role_id=owner_role.id
+    )
+
+    db.add(owner_role)
+    db.add(user_company)
+    db.commit()
+
     db.refresh(company_info)
     return company_info
 

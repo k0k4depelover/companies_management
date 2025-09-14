@@ -4,7 +4,10 @@ from sqlalchemy.ext.declarative import declarative_base
 import os
 from dotenv import load_dotenv
 
-SQLALCHEMY_DATABASE_URL=os.getenv("SQLALCHEMY_DATABASE_URL")
+load_dotenv()
+
+SQLALCHEMY_DATABASE_URL=os.getenv("SQLALCHEMY_DATABASE_URL", "mysql+pymysql://root:katty2023@localhost:3306/companies_management")
+
 
 engine= create_engine(SQLALCHEMY_DATABASE_URL)
 

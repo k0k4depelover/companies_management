@@ -1,22 +1,20 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Annotated
-from sqlalchemy.orm import Session
-from ..database import SessionLocal
-from ..dependencies import db_dependency, user_dependency
-from fastapi.security import OAuth2PasswordBearer
+from ..dependencies import db_dependency
 from passlib.context import CryptContext
 from ..models import User
 from ..schemas.user import  UserRequest, UserOut
+from ..routers.auth import get_current_user
 
 router= APIRouter(
     prefix="/users",
     tags=["users"]
 )
-
+user_dependency = Annotated[dict, Depends(get_current_user)]
 bcrypt_context= CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 @router.get("/me", status_code=status.HTTP_200_OK, response_model=UserOut)
-async def get_current_user(user: user_dependency, db: db_dependency):
+async def get_current_user(db: db_dependency, user:Annotated[dict, Depends(get_current_user)]):
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

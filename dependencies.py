@@ -2,7 +2,7 @@ from .database import SessionLocal
 from sqlalchemy.orm import Session
 from typing import Annotated
 from fastapi import Depends
-from .routers.auth import get_current_user
+
 
 
 async def get_db():
@@ -14,4 +14,3 @@ async def get_db():
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
-user_dependency = Annotated[dict, Depends(get_current_user)]

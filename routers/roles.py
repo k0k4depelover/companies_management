@@ -1,12 +1,15 @@
-from fastapi import APIRouter, HTTPException, status
-from ..dependencies import user_dependency, db_dependency
+from fastapi import APIRouter, HTTPException, status,Depends
+from ..dependencies import  db_dependency
 from ..schemas.role import RoleOut, RoleCreated
-from typing import List
+from ..routers.auth import get_current_user
+from typing import List, Annotated
 from ..models import Role, Company, UserCompany
 router= APIRouter(
     prefix="/roles",
-    tags="Roles"
+    tags=["Roles"]
 )
+
+user_dependency = Annotated[dict, Depends(get_current_user)]
 
 @router.get("/company/{company_id}", response_model=List[RoleOut])
 async def get_roles(company_id:int, db:db_dependency, user:user_dependency):
@@ -139,3 +142,4 @@ async def get_role_by_id(company_id: int, role_id: int, db: db_dependency, user:
         )
     
     return role
+
